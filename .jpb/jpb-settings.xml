@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DatabaseMigrationSettings">
+    <database-infos>
+      <database-info>
+        <option name="enabled" value="true" />
+        <dbms-id>postgres</dbms-id>
+        <mapping-types>
+          <mapping-type sql-type-parameter="Nothing">
+            <java-class>java.lang.String</java-class>
+            <sql-type>text</sql-type>
+          </mapping-type>
+        </mapping-types>
+      </database-info>
+    </database-infos>
+  </component>
+  <component name="JpaPluginProjectSettings">
+    <option name="entityNameTemplate" />
+    <option name="tableNameTemplate" value="${className.underscore()}" />
+    <option name="columnNameTemplate" value="${fieldName.underscore()}" />
+    <option name="indexCase" value="upper" />
+    <option name="scaffoldingLanguage" />
+  </component>
+  <component name="ReverseEngineeringSettings">
+    <database-infos>
+      <database-info dbms-id="postgres">
+        <mapping-types>
+          <mapping-type sql-type="text" java-class="java.lang.String" />
+        </mapping-types>
+      </database-info>
+    </database-infos>
+  </component>
+</project>
