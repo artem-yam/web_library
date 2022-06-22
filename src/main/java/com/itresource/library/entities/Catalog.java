@@ -6,7 +6,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "\"CATALOGS\"", indexes = {
-    @Index(name = "CATALOGS_NAME_unique", columnList = "\"NAME\"", unique = true)})
+    @Index(name = "CATALOGS_NAME_unique", columnList = "\"NAME\"",
+        unique = true)})
 public class Catalog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,12 +16,6 @@ public class Catalog {
     
     @Column(name = "\"NAME\"", nullable = false)
     private String name;
-    
-    @ManyToMany
-    @JoinTable(name = "BOOK_PLACEMENTS",
-        joinColumns = @JoinColumn(name = "CATALOG_ID"),
-        inverseJoinColumns = @JoinColumn(name = "BOOK_ID"))
-    private Set<Book> books = new LinkedHashSet<>();
     
     public Integer getId() {
         return id;
@@ -38,12 +33,8 @@ public class Catalog {
         this.name = name;
     }
     
-    public Set<Book> getBooks() {
-        return books;
+    @Override
+    public String toString() {
+        return "Catalog{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
-    
-    public void setBooks(Set<Book> books) {
-        this.books = books;
-    }
-    
 }

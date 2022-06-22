@@ -54,6 +54,7 @@ let Utils = function () {
     }
 
     return {
+        setElementProperty,
         resetInnerHTML,
         resetValue,
         isEmpty,

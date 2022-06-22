@@ -7,6 +7,7 @@ import java.time.LocalDate;
 @Table(name = "\"BOOKS\"", indexes = {@Index(name = "BOOKS_TITLE_AUTHOR_unique",
     columnList = "\"TITLE\", \"AUTHOR\"", unique = true)})
 public class Book {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"ID\"", nullable = false)
@@ -21,11 +22,9 @@ public class Book {
     @Column(name = "\"RELEASE_DATE\"")
     private LocalDate releaseDate;
     
-    //    @ManyToMany
-    //    @JoinTable(name = "BOOK_PLACEMENTS",
-    //        joinColumns = @JoinColumn(name = "BOOK_ID"),
-    //        inverseJoinColumns = @JoinColumn(name = "CATALOG_ID"))
-    //    private Set<Catalog> catalogs = new LinkedHashSet<>();
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "\"CATALOG_ID\"", nullable = false)
+    private Catalog catalog;
     
     public Integer getId() {
         return id;
@@ -55,26 +54,23 @@ public class Book {
         return releaseDate;
     }
     
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = LocalDate.parse(releaseDate);
     }
     
-    //    public Set<Catalog> getCatalogs() {
-    //        return catalogs;
-    //    }
-    //
-    //    public void setCatalogs(Set<Catalog> catalogs) {
-    //        this.catalogs = catalogs;
-    //    }
+    public Catalog getCatalog() {
+        return catalog;
+    }
     
-    //    @Override
-    //    public String toString() {
-    //        return "Book{" +
-    //                   "id=" + id +
-    //                   ", title='" + title + '\'' +
-    //                   ", author='" + author + '\'' +
-    //                   ", releaseDate='" + releaseDate + '\'' +
-    //                   '}';
-    //    }
+    public void setCatalog(Catalog catalog) {
+        this.catalog = catalog;
+    }
+    
+    @Override
+    public String toString() {
+        return "Book{" + "id=" + id + ", title='" + title + '\'' +
+                   ", author='" + author + '\'' + ", releaseDate=" +
+                   releaseDate + ", catalog=" + catalog + '}';
+    }
     
 }

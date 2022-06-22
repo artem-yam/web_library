@@ -7,6 +7,10 @@ function Controller(booksModel) {
         return controlledBooksModel.addBook(bookFormData);
     }
 
+    function updateBook(bookFormData) {
+        return controlledBooksModel.updateBook(bookFormData);
+    }
+
     // переделать в смену каталога
     function updateRating(bookId, newTag) {
         controlledBooksModel.updateRating(bookId, newTag);
@@ -18,7 +22,7 @@ function Controller(booksModel) {
 
     return {
         addBook,
-        updateRating,
+        updateBook,
         deleteBook,
     };
 }

@@ -22,20 +22,22 @@
     </tr>
     <tr>
         <td>
-            <form name="add_book_form">
+            <form name="add_book_form" enctype="multipart/form-data">
                 <label for="new_book_title">Название книги:</label>
-                <input type="text" id="new_book_title" name="new_book_title">
+                <input type="text" id="new_book_title" name="title">
                 <label for="new_book_author">Автор книги:</label>
-                <input type="text" id="new_book_author" name="new_book_author">
+                <input type="text" id="new_book_author" name="author">
                 <label for="new_book_date">Дата выхода:</label>
-                <input type="date" id="new_book_date" name="new_book_date">
+                <input type="date" id="new_book_date" name="releaseDate">
 
 
-                <label id="catalogs_select_label" for="catalogs_select">Каталог:</label>
+                <label id="catalogs_select_label"
+                       for="catalogs_select">Каталог:</label>
                 <select id="catalogs_select" name="catalogs_select">
                 </select>
 
-                <input type="button" id="add_book_button" value="Добавить новую книгу">
+                <input type="button" id="add_book_button"
+                       value="Добавить новую книгу">
             </form>
         </td>
     </tr>
@@ -53,21 +55,31 @@
 <template id="table_row_template">
     <tr>
         <td>
-            <form name="book_form">
-                <label id="book_title_label" for="book_title">Название книги:</label>
-                <input type="text" id="book_title" name="book_title">
-                <label id="book_author_label" for="book_author">Автор книги:</label>
-                <input type="text" id="book_author" name="book_author">
+            <form name="book_form" enctype="multipart/form-data">
+
+                <input type="text" id="book_id" name="id" hidden>
+
+                <label id="book_title_label" for="book_title">Название
+                    книги:</label>
+                <input type="text" id="book_title" name="title">
+                <label id="book_author_label" for="book_author">Автор
+                    книги:</label>
+                <input type="text" id="book_author" name="author">
                 <label id="book_date_label" for="book_date">Дата выхода:</label>
-                <input type="date" id="book_date" name="book_date">
+                <input type="date" id="book_date" name="releaseDate">
 
 
-                <label id="book_catalog_label" for="book_catalog">Каталог:</label>
-                <input type="text" id="book_catalog" name="book_catalog" readonly value="какой-то каталог">
+                <label id="book_catalog_label"
+                       for="book_catalog">Каталог:</label>
+                <input type="text" id="book_catalog" name="book_catalog"
+                       readonly value="какой-то каталог">
 
-                <input type="button" value="Сохранить изменения">
-                <input type="button" value="Сменить каталог">
-                <input type="button" value="Удалить">
+                <input type="button" id="update_book_button"
+                       value="Сохранить изменения">
+                <input type="button" id="change_book_catalog_button"
+                       value="Сменить каталог">
+                <input type="button" id="delete_book_button"
+                       value="Удалить">
             </form>
         </td>
     </tr>

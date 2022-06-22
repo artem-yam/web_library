@@ -7,12 +7,19 @@ function BooksModel() {
 
     let booksStorage = [];
     let catalogsStorage = [];
-    let onBookAdd = new EventEmitter();
+    let onBooksRefresh = new EventEmitter();
 
     function addBook(bookFormData) {
         return Utils.sendRequest(AJAX_BOOKS_URL, bookFormData, requestType.POST)
             .then(function (response) {
-                onBookAdd.notify(response.id, response.title, response.author);
+                onBooksRefresh.notify(response.title, response.author);
+            });
+    }
+
+    function updateBook(bookFormData) {
+        return Utils.sendRequest(AJAX_BOOKS_URL, bookFormData, requestType.PUT)
+            .then(function (response) {
+                onBooksRefresh.notify(response.title, response.author);
             });
     }
 
@@ -32,7 +39,8 @@ function BooksModel() {
             .then(function (data) {
 //                booksStorage = data._embedded.books;
                 booksStorage = data;
-                console.log("Получены книги: " + booksStorage);
+                console.log("Получены книги:");
+                console.log(...booksStorage);
             });
     }
 
@@ -42,7 +50,8 @@ function BooksModel() {
             requestType.GET)
             .then(function (data) {
                 catalogsStorage = data;
-                console.log("Получены каталоги: " + catalogsStorage);
+                console.log("Получены каталоги:");
+                console.log(...catalogsStorage);
             });
     }
 
@@ -75,14 +84,14 @@ function BooksModel() {
 
     return {
         addBook,
-        updateRating,
+        updateBook,
 
         getBooksStorage,
         getCatalogsStorage,
         getAllBooks,
         getAllCatalogs,
 
-        onBookAdd,
+        onBooksRefresh,
         refreshBooks,
         refreshCatalogs,
         deleteBook

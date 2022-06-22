@@ -3,3 +3,8 @@ function Catalog(id, name) {
     this.name = name;
 }
 
+const catalogTypes = {
+    PUBLIC: "PUBLIC",
+    PRIVATE: "PRIVATE"
+};
+

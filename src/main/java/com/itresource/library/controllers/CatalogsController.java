@@ -1,6 +1,5 @@
 package com.itresource.library.controllers;
 
-import com.itresource.library.entities.Book;
 import com.itresource.library.entities.Catalog;
 import com.itresource.library.services.LibraryDataService;
 import org.apache.logging.log4j.LogManager;
