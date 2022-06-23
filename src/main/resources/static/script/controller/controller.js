@@ -3,17 +3,16 @@ function Controller(booksModel) {
 
     let controlledBooksModel = booksModel;
 
-    function addBook(bookFormData) {
-        return controlledBooksModel.addBook(bookFormData);
+    function addBook(newBook) {
+        return controlledBooksModel.addBook(newBook);
     }
 
-    function updateBook(bookFormData) {
-        return controlledBooksModel.updateBook(bookFormData);
+    function updateBook(book) {
+        return controlledBooksModel.updateBook(book);
     }
 
-    // переделать в смену каталога
-    function updateRating(bookId, newTag) {
-        controlledBooksModel.updateRating(bookId, newTag);
+    function changeBookCatalog(bookId, newCatalog) {
+        return controlledBooksModel.changeBookCatalog(bookId, newCatalog);
     }
 
     function deleteBook(bookId) {
@@ -23,6 +22,7 @@ function Controller(booksModel) {
     return {
         addBook,
         updateBook,
-        deleteBook,
+        changeBookCatalog,
+        deleteBook
     };
 }

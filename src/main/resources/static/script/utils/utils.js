@@ -26,22 +26,22 @@ let Utils = function () {
             requestType = requestType.GET;
         }
 
-        if (data instanceof FormData) {
-            ajaxRequest = $.ajax({
-                url: url,
-                type: requestType,
-                contentType: false,
-                processData: false,
-                data: data
-            });
-        } else {
+//        if (data instanceof FormData) {
+//            ajaxRequest = $.ajax({
+//                url: url,
+//                type: requestType,
+//                contentType: false,
+//                processData: false,
+//                data: data
+//            });
+//        } else {
             ajaxRequest = $.ajax({
                 url: url,
                 type: requestType,
                 contentType: AJAX_DATA_TYPE,
                 data: JSON.stringify(data)
             });
-        }
+//        }
 
         ajaxRequest.then(function (data) {
             return data;

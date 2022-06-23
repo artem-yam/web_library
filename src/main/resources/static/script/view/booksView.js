@@ -53,8 +53,6 @@ function BooksView(controller, model) {
         bookBlock.querySelector("#delete_book_button").setAttribute("id",
             "delete_book_button" + book.id);
 
-//        console.log("Элемент с названием книги: " + bookBlock.querySelector("#book_title" + book.id).getAttribute("value"));
-
         bookBlock.querySelector("#update_book_button" + book.id)
             .addEventListener('click', function () {
                 console.log("Изменяем книгу: " + book.id);
@@ -64,37 +62,86 @@ function BooksView(controller, model) {
                     alert("При изменении книги не заполнены поля");
                 } else {
                     if (confirm("Изменить книгу?")) {
-//                        mainController.updateBook(book.id).then(function () {
-//                            window.document.location.reload(true);
-//                        });
+                        let bookId =  window.document.querySelector("#book_id" + book.id).value;
+                        let bookTitle =  window.document.querySelector("#book_title" + book.id).value;
+                        let bookAuthor =  window.document.querySelector("#book_author" + book.id).value;
+                        let bookReleaseDate =  window.document.querySelector("#book_date" + book.id).value;
+                        let bookCatalog = null;
 
-                         let bookForm = window.document.forms.namedItem("book_form" + book.id);
-                         let bookFormData = new FormData(bookForm);
+                        let catalogName = window.document.querySelector("#book_catalog" + book.id).value;
 
-                         let catalogName = window.document.querySelector("#book_catalog" + book.id).value;
-
-                         for (let catalog of booksModel.getCatalogsStorage()) {
+                        for (let catalog of booksModel.getCatalogsStorage()) {
                             if (catalog.name == catalogName) {
-                                bookFormData.append("catalog", catalog.id);
+                                bookCatalog = catalog;
                                 break;
                             }
                         }
 
-                        console.log("formData при обновлении: ");
-                        console.log(...bookFormData);
+                        if (bookCatalog) {
+                            let book = new Book(bookId, bookTitle,
+                                bookAuthor, bookReleaseDate, bookCatalog);
 
-                        updateBook(bookFormData);
+                            console.log("Данные книги при обновлении: ");
+                            console.log(JSON.stringify(book));
+
+                            updateBook(book);
+                        }
                     }
+                }
+            });
+
+        bookBlock.querySelector("#change_book_catalog_button" + book.id)
+            .addEventListener('click', function () {
+
+                if (confirm("Изменить каталог книги?")) {
+                    let catalogName = window.document.querySelector("#book_catalog" + book.id).value;
+                    let newCatalog = null;
+
+                    for (let catalog of booksModel.getCatalogsStorage()) {
+                        if (catalog.name != catalogName) {
+                            newCatalog = catalog;
+                            break;
+                        }
+                    }
+
+                    if (newCatalog == null) {
+                        alert("Не обнаружен каталог для изменения!");
+                    } else {
+                        console.log("Изменяем каталог книги: " + book.id);
+                        console.log("Новый каталог: " + JSON.stringify(newCatalog));
+                        changeBookCatalog(book.id, newCatalog);
+                    }
+                }
+            });
+
+        bookBlock.querySelector("#delete_book_button" + book.id)
+            .addEventListener('click', function () {
+
+                if (confirm("Удалить книгу?")) {
+                    let bookId =  window.document.querySelector("#book_id" + book.id).value;
+
+                    deleteBook(bookId);
                 }
             });
 
         booksTable.appendChild(bookBlock);
     }
 
+    function changeBookCatalog(bookId, newCatalog) {
+            mainController.changeBookCatalog(bookId, newCatalog).catch(function (errors) {
+                alert("Ошибки при изменении книги: " + errors.responseJSON);
+            });
+        }
 
-    function updateBook(bookFormData) {
-        mainController.updateBook(bookFormData).catch(function (errors) {
+    function updateBook(book) {
+        mainController.updateBook(book).catch(function (errors) {
             alert("Ошибки при изменении книги: " + errors.responseJSON);
+        });
+    }
+
+    function deleteBook(bookId) {
+        mainController.deleteBook(bookId).catch(function (errors) {
+            alert("Ошибки при удалении книги: " + errors.responseJSON);
         });
     }
 
@@ -102,8 +149,6 @@ function BooksView(controller, model) {
             booksModel.refreshCatalogs().then(function () {
                 let catalogsSelectBlock = window.document.querySelector("#catalogs_select");
                 Utils.resetInnerHTML(catalogsSelectBlock);
-
-//                console.log("Отображаем каталоги" + booksModel.getCatalogsStorage());
 
                 for (let i = 0; i < booksModel.getCatalogsStorage().length; i++) {
                     addSelectOption(booksModel.getCatalogsStorage()[i]);
@@ -115,7 +160,6 @@ function BooksView(controller, model) {
         let catalogsSelectBlock = window.document.querySelector("#catalogs_select");
 
         catalogsSelectBlock.innerHTML+="<option>" + catalog.name + "</option>";
-//        catalogsSelectBlock.innerHTML+="<option" + (selected ? " selected" : "") + ">" + catalog.name + "</option>";
     }
 
 
@@ -129,10 +173,6 @@ function BooksView(controller, model) {
             let headerBlock = headerTemplate.content.cloneNode(true);
             booksTable.appendChild(headerBlock);
 
-//            console.log("Отображаем книги: ");
-//            console.log(...booksModel.getBooksStorage());
-
-
             for (let i = 0; i < booksModel.getBooksStorage().length; i++) {
                 if (!booksModel.getBooksStorage()[i].deleted) {
                     createBlock(booksModel.getBooksStorage()[i]);
@@ -141,49 +181,43 @@ function BooksView(controller, model) {
         });
     }
 
-
-    function addBook(bookFormData) {
-        mainController.addBook(bookFormData).catch(function (errors) {
+    function addBook(newBook) {
+        mainController.addBook(newBook).catch(function (errors) {
             alert("Ошибки при добавлении книги: " + errors.responseJSON);
         });
     }
 
     window.document.querySelector("#add_book_button")
         .addEventListener("click", function (event) {
-//            event.preventDefault();
-
-//            let bookForm = document.forms.namedItem("add_book_form");
-//            let bookFormData = new FormData(bookForm);
-//
-//            console.log("new_book_title: "+window.document.querySelector("#new_book_title").value);
-//
-
 
             if (! window.document.querySelector("#new_book_title").value
                 || ! window.document.querySelector("#new_book_author").value) {
                 alert("При добавлении книги не заполнены поля");
             } else {
                 if (confirm("Добавить книгу?")) {
-
-                    let bookForm = window.document.forms.namedItem("add_book_form");
-                    let bookFormData = new FormData(bookForm);
-//                    bookFormData.append("releaseDate", window.document.querySelector("#new_book_date").valueAsNumber);
-//                    bookFormData.append("releaseDate", window.document.querySelector("#new_book_date").value);
-//                    bookFormData.releaseDate = window.document.querySelector("#new_book_date").valueAsDate;
+                    let newBookTitle =  window.document.querySelector("#new_book_title").value;
+                    let newBookAuthor =  window.document.querySelector("#new_book_author").value;
+                    let newBookReleaseDate =  window.document.querySelector("#new_book_date").value;
+                    let newBookCatalog = null;
 
                     let catalogName = window.document.querySelector("#catalogs_select").value;
 
                     for (let catalog of booksModel.getCatalogsStorage()) {
                         if (catalog.name == catalogName) {
-                            bookFormData.append("catalog", catalog.id);
+                            newBookCatalog = catalog;
                             break;
                         }
                     }
 
-                    console.log("formData при добавлении: ");
-                    console.log(...bookFormData);
+                    if (newBookCatalog) {
+                        let newBook = new Book(null, newBookTitle,
+                            newBookAuthor, newBookReleaseDate, newBookCatalog);
 
-                    addBook(bookFormData);
+                        console.log("Данные новой книги при добавлении: ");
+                        console.log(JSON.stringify(newBook));
+
+                        addBook(newBook);
+                    }
                 }
             }
         });
@@ -192,7 +226,7 @@ function BooksView(controller, model) {
         booksModel.refreshBooks()
             .then(function () {
                 alert(
-                    "Книга '" + author + " - " + title + "' была добавлена или обновлена!");
+                    "Операция с книгой '" + author + " - " + title + "' была выполнена!");
 
                 showAllBooks();
             });

@@ -3,35 +3,52 @@ function BooksModel() {
 
     const AJAX_BOOKS_URL = "books";
     const AJAX_CATALOGS_URL = "catalogs";
+    const AJAX_BOOK_CATALOG_URL = "catalog";
     const URL_SEPARATOR = "/";
 
     let booksStorage = [];
     let catalogsStorage = [];
     let onBooksRefresh = new EventEmitter();
 
-    function addBook(bookFormData) {
-        return Utils.sendRequest(AJAX_BOOKS_URL, bookFormData, requestType.POST)
+    function addBook(newBook) {
+        return Utils.sendRequest(AJAX_BOOKS_URL, newBook, requestType.POST)
             .then(function (response) {
                 onBooksRefresh.notify(response.title, response.author);
             });
     }
 
-    function updateBook(bookFormData) {
-        return Utils.sendRequest(AJAX_BOOKS_URL, bookFormData, requestType.PUT)
+    function updateBook(book) {
+        return Utils.sendRequest(AJAX_BOOKS_URL + URL_SEPARATOR + book.id,
+            book, requestType.PUT)
             .then(function (response) {
                 onBooksRefresh.notify(response.title, response.author);
             });
     }
 
-    function updateRating(bookId, newRating) {
-            let bookToUpdate = findBook(bookId);
-            bookToUpdate.rating = newRating;
-
-            return Utils.sendRequest(
-                AJAX_BOOKS_URL + URL_SEPARATOR + bookId, bookToUpdate,
-                requestType.PUT);
+    function updateBook(book) {
+        return Utils.sendRequest(AJAX_BOOKS_URL + URL_SEPARATOR + book.id,
+            book, requestType.PUT)
+            .then(function (response) {
+                onBooksRefresh.notify(response.title, response.author);
+            });
     }
 
+
+    function deleteBook(bookId) {
+        return Utils.sendRequest(AJAX_BOOKS_URL + URL_SEPARATOR + bookId,
+            null, requestType.DELETE)
+            .then(function (response) {
+                onBooksRefresh.notify(response.title, response.author);
+            });
+    }
+
+    function changeBookCatalog(bookId, newCatalog) {
+        return Utils.sendRequest(AJAX_BOOKS_URL + URL_SEPARATOR + bookId +
+            URL_SEPARATOR + AJAX_BOOK_CATALOG_URL, newCatalog, requestType.PATCH)
+            .then(function (response) {
+                onBooksRefresh.notify(response.title, response.author);
+            });
+    }
 
     function getAllBooks() {
         return Utils.sendRequest(AJAX_BOOKS_URL, null,
@@ -71,20 +88,10 @@ function BooksModel() {
         return catalogsStorage;
     }
 
-
-    function deleteBook(bookId) {
-        return Utils.sendRequest(AJAX_BOOKS_URL, bookId, requestType.DELETE)
-            .then(async function () {
-                await refreshModel();
-
-                alert("Book " + bookId + " was deleted");
-
-            });
-    }
-
     return {
         addBook,
         updateBook,
+        changeBookCatalog,
 
         getBooksStorage,
         getCatalogsStorage,

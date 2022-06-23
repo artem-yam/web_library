@@ -76,72 +76,37 @@ public class LibraryDataService {
         return updatedBook;
     }
     
-    //    public Book getBookById(int id) {
-    //        Optional<Book> employeesOptional = booksRepository.findById(id);
-    //
-    //        logger.info("Found book: {}", employeesOptional.orElse(null));
-    //
-    //        return employeesOptional.orElse(null);
-    //    }
+    public Book deleteBook(int bookId) {
+        Optional<Book> book = booksRepository.findById(bookId);
+        
+        if (book.isPresent()) {
+            booksRepository.delete(book.get());
     
-    //    public Book updateBook(Book book) {
-    //        if (booksRepository.existsById(book.getId())) {
-    //            Book updatedBook = booksRepository.save(book);
-    //
-    //            logger.info("Updated book: {}", updatedBook);
-    //            return updatedBook;
-    //        } else {
-    //            logger.info("Book {} WASN'T updated", book);
-    //            return null;
-    //        }
-    //
-    //    }
+            logger.info("Deleted book: {}", book.get());
+            return book.get();
+        }
+        
+        return null;
+    }
     
-    //    @Transactional
-    //    public boolean deleteBook(Book book) {
-    //        Optional<BookPlacement> bookPlacement =
-    //            bookPlacementsRepository.findById(book.getId());
-    //        if (booksRepository.existsById(book.getId()) &&
-    //                bookPlacement.isPresent()) {
-    //
-    //            bookPlacementsRepository.delete(bookPlacement.get());
-    //
-    //            booksRepository.delete(book);
-    //            //        booksRepository.deleteById(book.getId());
-    //
-    //            logger.info("Deleted book: {}", book);
-    //            return true;
-    //        } else {
-    //            logger.info("Book {} WASN'T delete", book);
-    //            return false;
-    //        }
-    //    }
-    
-    //    public boolean changeBookCatalog(Book book, String catalogName) {
-    //        Optional<Catalog> catalog = catalogsRepository.findByName
-    //        (catalogName);
-    //
-    //        if (bookPlacementsRepository.existsById(book.getId()) &&
-    //                catalog.isPresent()) {
-    //            //            int catalogId = catalog.get().getId();
-    //
-    //            BookPlacement bookPlacement = new BookPlacement();
-    //            //            bookPlacement.setId(book.getId());
-    //            bookPlacement.setBook(book);
-    //            bookPlacement.setCatalog(catalog.get());
-    //
-    //            bookPlacementsRepository.save(bookPlacement);
-    //            //        booksRepository.deleteById(book.getId());
-    //
-    //            logger.info("Book {} moved to catalog '{}'", book,
-    //            catalogName);
-    //            return true;
-    //        } else {
-    //            logger.info("Book {} WASN'T moved to catalog '{}'", book,
-    //                catalogName);
-    //            return false;
-    //        }
-    //    }
+    public Book changeBookCatalog(int bookId, Catalog newCatalog) {
+        Book updatedBook = null;
+        
+        Optional<Book> bookOptional = booksRepository.findById(bookId);
+        
+        if (bookOptional.isPresent() && catalogsRepository.existsById(
+            newCatalog.getId())) {
+            
+            Book updatingBook = bookOptional.get();
+            
+            updatingBook.setCatalog(newCatalog);
+            
+            updatedBook = booksRepository.save(updatingBook);
+        }
+        
+        logger.info("Change book catalog: {}", updatedBook);
+        return updatedBook;
+    }
     
     public List<Catalog> getAllCatalogs() {
         Iterable<Catalog> catalogs = catalogsRepository.findAll();
@@ -153,5 +118,4 @@ public class LibraryDataService {
         return catalogsList;
     }
     
-    //    @Transactional
 }

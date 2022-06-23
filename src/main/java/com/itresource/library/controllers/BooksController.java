@@ -1,6 +1,7 @@
 package com.itresource.library.controllers;
 
 import com.itresource.library.entities.Book;
+import com.itresource.library.entities.Catalog;
 import com.itresource.library.services.LibraryDataService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,23 +24,14 @@ public class BooksController {
     @Autowired
     private LibraryDataService libraryDataService;
     
-    @Autowired
-    private CatalogsController catalogsController;
-    
-    //    @GetMapping("/{id}")
-    //    public Book getBookById(@PathVariable int id) {
-    //        logger.info("Getting book with id {}", id);
-    //        return libraryDataService.getBookById(id);
-    //    }
-    
     @GetMapping
     public List<Book> getAllBooks() {
         logger.info("Getting all books");
         return libraryDataService.getAllBooks();
     }
     
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity addBook(Book newBook) {
+    @PostMapping
+    public ResponseEntity addBook(@RequestBody Book newBook) {
         
         logger.info("Adding book : {}", newBook);
         
@@ -49,8 +41,7 @@ public class BooksController {
         
         try {
             responseEntity = new ResponseEntity<>(
-                libraryDataService.saveBook(newBook),
-                HttpStatus.OK);
+                libraryDataService.saveBook(newBook), HttpStatus.OK);
         } catch (Exception ex) {
             logger.info("Can't add new book", ex);
             errors.add(ex.getMessage());
@@ -61,8 +52,11 @@ public class BooksController {
         return responseEntity;
     }
     
-    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity updateBook(Book updatedBook) {
+    @PutMapping("/{bookId}")
+    public ResponseEntity updateBook(@PathVariable int bookId,
+        @RequestBody Book updatedBook) {
+        
+        updatedBook.setId(bookId);
         
         logger.info("Updating book : {}", updatedBook);
         
@@ -72,14 +66,60 @@ public class BooksController {
         
         try {
             responseEntity = new ResponseEntity<>(
-                libraryDataService.updateBook(updatedBook),
-                HttpStatus.OK);
+                libraryDataService.updateBook(updatedBook), HttpStatus.OK);
         } catch (Exception ex) {
             logger.info("Can't update book", ex);
             errors.add(ex.getMessage());
         }
         
         logger.info("Update book method returns: {}", responseEntity);
+        
+        return responseEntity;
+    }
+    
+    @PatchMapping("/{bookId}/catalog")
+    public ResponseEntity changeBookCatalog(@PathVariable int bookId,
+        @RequestBody Catalog catalog) {
+        
+        logger.info("For book with id '" + bookId + "' changing catalog to: " +
+                        catalog);
+        
+        List<String> errors = new ArrayList<>();
+        ResponseEntity responseEntity = new ResponseEntity<>(errors,
+            HttpStatus.NOT_ACCEPTABLE);
+        
+        try {
+            responseEntity = new ResponseEntity<>(
+                libraryDataService.changeBookCatalog(bookId, catalog),
+                HttpStatus.OK);
+        } catch (Exception ex) {
+            logger.info("Can't change book catalog", ex);
+            errors.add(ex.getMessage());
+        }
+        
+        logger.info("Change book catalog method returns: {}", responseEntity);
+        
+        return responseEntity;
+    }
+    
+    @DeleteMapping("/{bookId}")
+    public ResponseEntity deleteBook(@PathVariable int bookId) {
+        
+        logger.info("Deleting book with id '" + bookId + "'");
+        
+        List<String> errors = new ArrayList<>();
+        ResponseEntity responseEntity = new ResponseEntity<>(errors,
+            HttpStatus.NOT_ACCEPTABLE);
+        
+        try {
+            responseEntity = new ResponseEntity<>(
+                libraryDataService.deleteBook(bookId), HttpStatus.OK);
+        } catch (Exception ex) {
+            logger.info("Can't delete book", ex);
+            errors.add(ex.getMessage());
+        }
+        
+        logger.info("Change book catalog method returns: {}", responseEntity);
         
         return responseEntity;
     }
