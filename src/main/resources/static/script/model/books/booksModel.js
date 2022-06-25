@@ -54,7 +54,6 @@ function BooksModel() {
         return Utils.sendRequest(AJAX_BOOKS_URL, null,
             requestType.GET)
             .then(function (data) {
-//                booksStorage = data._embedded.books;
                 booksStorage = data;
                 console.log("Получены книги:");
                 console.log(...booksStorage);

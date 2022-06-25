@@ -21,12 +21,6 @@ public class CatalogsController {
     @Autowired
     private LibraryDataService libraryDataService;
     
-    //    @GetMapping("/{id}")
-    //    public Book getBookById(@PathVariable int id) {
-    //        logger.info("Getting book with id {}", id);
-    //        return libraryDataService.getBookById(id);
-    //    }
-    
     @GetMapping
     public List<Catalog> getAllCatalogs() {
         logger.info("Getting all catalog");
