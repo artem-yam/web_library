@@ -9,8 +9,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-//@Configuration
-//@EnableWebMvc
 @ComponentScan("com.itresource.library")
 public class ServletInitializer extends SpringBootServletInitializer {
 
@@ -18,16 +16,5 @@ public class ServletInitializer extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(LibraryApplication.class);
 	}
-	
-//	@Bean
-//	public InternalResourceViewResolver setupViewResolver() {
-//		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-////		resolver.setPrefix("../resources/static/jsp/");
-//		resolver.setPrefix("../resources/static/");
-//		resolver.setSuffix(".jsp");
-//		resolver.setViewClass(JstlView.class);
-//
-//		return resolver;
-//	}
 
 }
